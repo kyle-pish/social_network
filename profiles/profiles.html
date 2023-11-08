@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Profiles page</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div id="profile">
+            <div id="bio">
+                <h2>Bio: </h2>
+            </div>
+            <div id="friends">
+                <h2>Friends: </h2>
+                <ul id="friends_list"></ul>
+            </div>
+            <div id="add_friend">
+                <h2>Add a friend:</h2>
+                <form action="/submit" method="POST">
+                    <input type="text" value="friend">
+                    <input type="submit" value="Add Friend">
+                </form>
+            </div>
+            <div id="posts">
+                <h2>Posts: </h2>
+            </div>
+            <div id="add_post">
+                <h2>Add post: </h2>
+                <form action="/submit" method="POST">
+                    <input type="text" value="post">
+                    <input type="submit" value="Post">
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

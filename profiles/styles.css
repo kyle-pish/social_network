@@ -1,0 +1,31 @@
+body {
+    background-color: black;
+    padding: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+#bio {
+    padding: 20px;
+}
+
+#friends {
+    padding: 20px;
+}
+
+#add_friend {
+    padding: 20px;
+}
+
+#posts {
+    padding: 20px;
+}
+
+#add_post {
+    padding: 20px;
+}
+
+#profile {
+    background-color: white;
+    padding-bottom: 200px;
+}
