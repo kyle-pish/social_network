@@ -1,31 +1,103 @@
 body {
-    background-color: black;
-    padding: 20px;
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
-#bio {
-    padding: 20px;
-}
-
-#friends {
-    padding: 20px;
-}
-
-#add_friend {
-    padding: 20px;
-}
-
-#posts {
-    padding: 20px;
-}
-
-#add_post {
+    background-color: #232323;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
     padding: 20px;
 }
 
 #profile {
-    background-color: white;
-    padding-bottom: 200px;
+    background-color: #333;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+#user-info {
+    display: flex;
+    align-items: center;
+}
+
+#profile-picture {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+    border: 2px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    color: #fff;
+    font-size: 24px;
+    margin: 0;
+}
+
+p {
+    color: #ccc;
+    margin: 0;
+}
+
+#followers-following {
+    display: flex;
+    justify-content: center;
+
+}
+
+#followers-following > div {
+    text-align: center;
+    margin: 25px;
+}
+
+h2 {
+    color: #fff;
+    font-size: 16px;
+}
+
+a {
+    color: #0073e6;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #444;
+    color: #fff;
+}
+
+input[type="submit"] {
+    background-color: #0073e6;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+#edit-profile-button-container {
+    margin-top: 10px;
+}
+
+#edit-profile-button {
+    color: #0073e6;
 }

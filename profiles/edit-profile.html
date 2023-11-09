@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="edit-profile" class="container">
+        <h1>Edit Profile</h1>
+        <form action="/update-profile" method="POST" id="profile-form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="Your Name">
+            </div>
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="yourusername">
+            </div>
+            <div class="form-group">
+                <label for="bio">Bio:</label>
+                <textarea id="bio" name="bio">Insert your bio here...</textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save Changes">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

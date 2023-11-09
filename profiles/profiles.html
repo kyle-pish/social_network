@@ -1,35 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Profiles page</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <div id="profile">
-            <div id="bio">
-                <h2>Bio: </h2>
+<head>
+    <title>The Social Network</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="profile">
+        <div id="header">
+            <div id="user-info" style="margin-bottom: 20px;">
+                <div>
+                    <img src="profile-picture.jpg" alt="Profile Picture" id="profile-picture">
+                </div>
+                <div id="user-details">
+                    <h1 id="username">Your Name</h1>
+                    <p id="user-handle">@yourusername</p>
+                </div>
+                <div id="followers-following">
+                    <div>
+                        <h2>Followers</h2>
+                        <a href="followers.html" id="followers-count">200</a>
+                    </div>
+                    <div>
+                        <h2>Following</h2>
+                        <a href="following.html" id="following-count">100</a>
+                    </div>
+                </div>
             </div>
-            <div id="friends">
-                <h2>Friends: </h2>
-                <ul id="friends_list"></ul>
+            <div id="edit-profile-button-container">
+                <a href="edit-profile.html" id="edit-profile-button">Edit Profile</a>
             </div>
-            <div id="add_friend">
-                <h2>Add a friend:</h2>
-                <form action="/submit" method="POST">
-                    <input type="text" value="friend">
-                    <input type="submit" value="Add Friend">
-                </form>
-            </div>
-            <div id="posts">
-                <h2>Posts: </h2>
-            </div>
-            <div id="add_post">
-                <h2>Add post: </h2>
-                <form action="/submit" method="POST">
-                    <input type="text" value="post">
-                    <input type="submit" value="Post">
-                </form>
-            </div>
+            
         </div>
-    </body>
+        <div id="bio" style="margin-top: 20px;"> 
+            <h2>Bio</h2>
+            <p id="user-bio">Insert your bio here...</p>
+        </div>
+        <div id="add_post" style="margin-top: 20px;"> 
+            <h2>Post Something...</h2>
+            <form action="/submit" method="POST">
+                <textarea placeholder="What's happening?" id="tweet-text" style="margin-bottom: 10px;"></textarea> <!-- Added margin-bottom to textarea -->
+                <input type="submit" value="Post">
+            </form>
+        </div>
+        <div id="posts" style="margin-top: 20px;"> 
+            <h2>Posts</h2>
+        </div>
+    </div>
+    <script src="profile.js"></script>
+</body>
 </html>
