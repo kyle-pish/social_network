@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, g
 from flask_bcrypt import Bcrypt
-implr
 import sqlite3
 
 app = Flask(__name__)
@@ -88,3 +87,4 @@ def login():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
