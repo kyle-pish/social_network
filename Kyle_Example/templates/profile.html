@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>User Profile</h1>
+    {% if user %}
+        <p><strong>Name:</strong> {{ user[1] }}</p>
+        <p><strong>Username:</strong> {{ user[2] }}</p>
+        <p><strong>Age:</strong> {{ user[4] }}</p>
+        <!-- Add more profile information as needed -->
+    {% else %}
+        <p>User data not found.</p>
+    {% endif %}
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="/">Logout</a>
+</body>
+
+</html>

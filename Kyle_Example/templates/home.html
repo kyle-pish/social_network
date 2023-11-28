@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>Welcome to the Home Page</h1>
+    <p>Main content of your home page goes here.</p>
+    <a href="{{ url_for('profile', username=username) }}">Profile</a>
+    <a href="/">Logout</a>
+</body>
+
+</html>
