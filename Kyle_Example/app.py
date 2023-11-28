@@ -26,14 +26,16 @@ def create_table():
     conn = create_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            username TEXT UNIQUE,
-            password TEXT,
-            age INTEGER
-        )
-    ''')
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        username TEXT UNIQUE,
+        password TEXT,
+        age INTEGER,
+        following_count INTEGER DEFAULT 0  -- New column for following count
+    )
+''')
+
     conn.commit()
     conn.close()
 
@@ -105,11 +107,22 @@ def profile(username):
 
             cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
             user_data = cursor.fetchone()
+
+            # Get the count of followed users for the logged-in user
+            cursor.execute('''
+                SELECT COUNT(u.username)
+                FROM users u
+                INNER JOIN following f ON u.id = f.following_id
+                INNER JOIN users u2 ON f.follower_id = u2.id
+                WHERE u2.username = ?
+            ''', (session['username'],))
+            following_count = cursor.fetchone()[0]
+
             conn.close()
 
             if user_data:
-                # Pass user data to the profile template
-                return render_template('profile.html', user=user_data)
+                # Pass user data and following count to the profile template
+                return render_template('profile.html', user=user_data, following_count=following_count)
             else:
                 # Handle case where user data is not found
                 return "User data not found."
@@ -117,6 +130,28 @@ def profile(username):
             return "Username not provided."
     else:
         return redirect(url_for('login'))
+    
+@app.route('/search', methods=['GET'])
+def search():
+    if 'username' in session:
+        search_username = request.args.get('search_username')
+
+        conn = create_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('SELECT * FROM users WHERE username = ?', (search_username,))
+        user_data = cursor.fetchone()
+        conn.close()
+
+        if user_data:
+            return render_template('search.html', user_data=user_data)
+        else:
+            return render_template('search.html', user_not_found=True)
+
+    return redirect(url_for('login'))
+
+
+
     
 @app.route('/logout')
 def logout():
