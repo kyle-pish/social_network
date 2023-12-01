@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 # Define the path to the SQLite database file
 DATABASE_PATH = os.path.join(os.getcwd(), 'users.db')
+DATABASE_PATH_POSTS = os.path.join(os.getcwd(), 'posts.db')
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -39,6 +40,27 @@ def create_table():
     conn.commit()
     conn.close()
 
+def create_posts_connection():
+    """Create a connection to the posts database"""
+    conn = None
+    try:
+        conn = sqlite3.connect(DATABASE_PATH_POSTS)
+    except sqlite3.Error as e:
+        print(e)
+    return conn
+
+def create_post_table():
+    """Create a table to store the posts of users"""
+    conn = create_posts_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        post_content TEXT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
 
 @app.route('/')
 def login():
@@ -150,8 +172,44 @@ def search():
 
     return redirect(url_for('login'))
 
+@app.route('/addfriend', methods=['POST'])
+def add_friend():
+    username = request.form.get('username')
+    return "Friend added successfully"
 
+@app.route('/makepost', methods=['GET'])
+def make_post():
+    return render_template('makepost.html')
 
+@app.route('/post', methods=['POST'])
+def create_post():
+    post = request.form.get('post')
+    username = request.form.get('username')
+    conn = create_posts_connection()
+    cursor = conn.cursor()
+
+    # conn2 = create_connection()
+    # cursor2 = conn2.cursor()
+
+    # cursor2.execute('SELECT * FROM users WHERE username = ?', (username,))
+    # user_data = cursor2.fetchone()
+
+    # conn2.close()
+    print("username:")
+    print(username)
+    print("post:")
+    print(post)
+    try:
+        cursor.execute('INSERT INTO posts (username, post_content) VALUES (?, ?)', 
+                        (username, post))
+
+        conn.commit()
+        conn.close()
+        return render_template('home.html')
+    except sqlite3.IntegrityError:
+            conn.rollback()
+            conn.close()
+            return "Post could not be posted at this time"
     
 @app.route('/logout')
 def logout():
@@ -162,4 +220,5 @@ def logout():
 
 if __name__ == '__main__':
     create_table()  # Create the table when the app starts
+    create_post_table() # Create the table for the posts
     app.run(debug=True)
