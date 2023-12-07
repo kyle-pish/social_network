@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 # Define the path to the SQLite database file
 DATABASE_PATH = os.path.join(os.getcwd(), 'users.db')
+DATABASE_PATH_POSTS = os.path.join(os.getcwd(), 'posts.db')
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -31,14 +32,34 @@ def create_table():
         name TEXT,
         username TEXT UNIQUE,
         password TEXT,
-        age INTEGER,
-        following_count INTEGER DEFAULT 0  -- New column for following count
+        age INTEGER
     )
 ''')
 
     conn.commit()
     conn.close()
 
+def create_posts_connection():
+    """Create a connection to the posts database"""
+    conn = None
+    try:
+        conn = sqlite3.connect(DATABASE_PATH_POSTS)
+    except sqlite3.Error as e:
+        print(e)
+    return conn
+
+def create_post_table():
+    """Create a table to store the posts of users"""
+    conn = create_posts_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS posts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        post_content TEXT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
 
 @app.route('/')
 def login():
@@ -99,6 +120,7 @@ def home():
 
 @app.route('/profile/<username>', methods=['GET'])
 def profile(username):
+    print("Username parameter:", username)
     if 'username' in session:
         if username:
             # Fetch user profile information from the database and pass it to the template
@@ -107,8 +129,9 @@ def profile(username):
 
             cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
             user_data = cursor.fetchone()
-
+            print(user_data)
             # Get the count of followed users for the logged-in user
+            """
             cursor.execute('''
                 SELECT COUNT(u.username)
                 FROM users u
@@ -119,10 +142,19 @@ def profile(username):
             following_count = cursor.fetchone()[0]
 
             conn.close()
-
+            """
             if user_data:
+                # Fetch posts from the posts database for the specified username
+                conn_posts = create_posts_connection()
+                cursor_posts = conn_posts.cursor()
+
+                cursor_posts.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (username,))
+                posts = cursor_posts.fetchall()
+                print(posts , "hey")
+
+                conn_posts.close()
                 # Pass user data and following count to the profile template
-                return render_template('profile.html', user=user_data, following_count=following_count)
+                return render_template('profile.html', user=user_data,posts=posts)
             else:
                 # Handle case where user data is not found
                 return "User data not found."
@@ -150,8 +182,44 @@ def search():
 
     return redirect(url_for('login'))
 
+@app.route('/addfriend', methods=['POST'])
+def add_friend():
+    username = request.form.get('username')
+    return "Friend added successfully"
 
+@app.route('/makepost', methods=['GET'])
+def make_post():
+    return render_template('makepost.html')
 
+@app.route('/post', methods=['POST'])
+def create_post():
+    post = request.form.get('post')
+    username = request.form.get('username')
+    conn = create_posts_connection()
+    cursor = conn.cursor()
+
+    # conn2 = create_connection()
+    # cursor2 = conn2.cursor()
+
+    # cursor2.execute('SELECT * FROM users WHERE username = ?', (username,))
+    # user_data = cursor2.fetchone()
+
+    # conn2.close()
+    print("username:")
+    print(username)
+    print("post:")
+    print(post)
+    try:
+        cursor.execute('INSERT INTO posts (username, post_content) VALUES (?, ?)', 
+                        (username, post))
+
+        conn.commit()
+        conn.close()
+        return render_template('home.html')
+    except sqlite3.IntegrityError:
+            conn.rollback()
+            conn.close()
+            return "Post could not be posted at this time"
     
 @app.route('/logout')
 def logout():
@@ -162,4 +230,5 @@ def logout():
 
 if __name__ == '__main__':
     create_table()  # Create the table when the app starts
+    create_post_table() # Create the table for the posts
     app.run(debug=True)
