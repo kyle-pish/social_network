@@ -2,31 +2,58 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Search</title>
+    <title>User Search</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> <!-- Link to your CSS file -->
 </head>
 <body>
-    <h1>User Search</h1>
-    <form action="/search" method="GET">
-        <label for="search_username">Search by Username:</label>
-        <input type="text" id="search_username" name="search_username" required>
-        <input type="submit" value="Search">
-    </form>
+    <header>
+        <div class="container flex justify-between items-center">
+            <h1>User Search</h1>
+            <nav>
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('profile', username=session['username']) }}">Profile</a>
+                <a href="{{ url_for('friends') }}">Friends</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section>
+            <div class="container">
+                <form action="/search" method="GET">
+                    <label for="search_username">Search by Username:</label>
+                    <input type="text" id="search_username" name="search_username" required>
+                    <input type="submit" value="Search">
+                </form>
+            </div>
+        </section>
 
-    <!-- Display search results or user not found message -->
-    {% if user_data %}
-        <h2>Search Results</h2>
-        <p><strong>Name:</strong> {{ user_data[1] }}</p>
-        <p><strong>Username:</strong> {{ user_data[2] }}</p>
-        <p><strong>Age:</strong> {{ user_data[4] }}</p>
-        <!-- Add more profile information as needed -->
-        
+        <section id="search-results">
+            <div class="container">
+                <!-- Display search results or user not found message -->
+                {% if user_data %}
+                    <h2>Search Results</h2>
 
-    {% elif user_not_found %}
-        <p>User not found.</p>
-    {% endif %}
-
-    <a href="{{ url_for('home') }}">Home</a>
-    <a href="{{ url_for('profile', username=session['username']) }}">Profile</a>
+                    <div class="usercard">
+                        <div>
+                            <p><strong>Name:</strong> {{ user_data[1] }}</p>
+                            <p><strong>Username:</strong> {{ user_data[2] }}</p>
+                            <p><strong>Age:</strong> {{ user_data[4] }}</p>
+                        </div>
+                        <div>
+                            <!-- Button to send friend request -->
+                            <form action="/send_friend_request" method="POST">
+                                <input type="hidden" name="receiver_username" value="{{ user_data[2] }}">
+                                <input type="submit" value="Send Friend Request">
+                            </form>
+                        </div>
+                        <!-- Add more profile information as needed -->
+                    </div>
+                    
+                {% elif user_not_found %}
+                    <p>User not found.</p>
+                {% endif %}
+            </div>
+        </section>
+    </main>
 </body>
 </html>

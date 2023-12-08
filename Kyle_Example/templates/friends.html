@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Friends List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <div class="container flex justify-between items-center">
+            <h1>My Friends and Friend Requests</h1>
+            <nav>
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('profile', username=session['username']) }}">Profile</a>
+                <a href="{{ url_for('search') }}">Search Users</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="friends-list">
+            <div class="container">
+                <h2>Friends</h2>
+                {% if friends %}
+                    <div class="friendcards">
+                        {% for friend in friends %}
+                            <div class="friendcard">
+                                <p><strong>Name:</strong> {{ friend[1] }}</p>
+                                <p><strong>Username:</strong> {{ friend[2] }}</p>
+                                <p><strong>Age:</strong> {{ friend[3] }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>You have no friends added yet.</p>
+                {% endif %}
+            </div>
+        </section>
+        <section id="friend-requests">
+            <div class="container">
+                <h2>Pending Friend Requests</h2>
+                {% if friend_requests %}
+                    <div class="requestcards">
+                        {% for request in friend_requests %}
+                            <div class="requestcard">
+                                <p>From: {{ request[1] }}</p>
+                                <div>
+                                    <a href="{{ url_for('respond_friend_request', request_id=request[0], response='accepted') }}">Accept</a>
+                                    <a href="{{ url_for('respond_friend_request', request_id=request[0], response='declined') }}">Decline</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No pending friend requests.</p>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

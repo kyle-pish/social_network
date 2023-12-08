@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Friend Request Sent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <header>
+        <div class="container flex justify-between items-center">
+            <h1>Friend Request Status</h1>
+            <nav>
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('profile', username=session['username']) }}">Profile</a>
+                <a href="{{ url_for('friends', username=session['username']) }}">Friends</a>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="request-sent">
+            <div class="container">
+                <p>{{ message }}</p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

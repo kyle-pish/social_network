@@ -32,7 +32,18 @@ def create_table():
         username TEXT UNIQUE,
         password TEXT,
         age INTEGER,
+        followers TEXT
         following_count INTEGER DEFAULT 0  -- New column for following count
+    )
+''')
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS friend_requests (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sender_id INTEGER,
+        receiver_id INTEGER,
+        status TEXT CHECK( status IN ('pending','accepted','declined') ) NOT NULL DEFAULT 'pending',
+        FOREIGN KEY (sender_id) REFERENCES users (id),
+        FOREIGN KEY (receiver_id) REFERENCES users (id)
     )
 ''')
 
@@ -151,12 +162,75 @@ def search():
     return redirect(url_for('login'))
 
 
-
-    
+ 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
+
+# -------------- Friends Functionality
+@app.route('/friends')
+def friends():
+    if 'username' in session:
+        conn = create_connection()
+        cursor = conn.cursor()
+
+        # Fetch the current user's ID
+        cursor.execute('SELECT id FROM users WHERE username = ?', (session['username'],))
+        user_id = cursor.fetchone()[0]
+
+        # Fetch friends
+        cursor.execute('''
+            SELECT u.id, u.name, u.username, u.age 
+            FROM users u
+            JOIN friendships f ON u.id = f.user_id1 OR u.id = f.user_id2
+            WHERE (f.user_id1 = ? OR f.user_id2 = ?) AND u.id != ?
+        ''', (user_id, user_id, user_id))
+        friends = cursor.fetchall()
+
+        conn.close()
+        return render_template('friends.html', friends=friends)
+    
+    return redirect(url_for('login'))
+
+
+@app.route('/send_friend_request', methods=['GET', 'POST'])
+def send_friend_request():
+    if 'username' in session:
+        if request.method == 'POST':
+            receiver_username = request.form['receiver_username']
+
+            conn = create_connection()
+            cursor = conn.cursor()
+
+            # Fetch the current user's ID
+            cursor.execute('SELECT id FROM users WHERE username = ?', (session['username'],))
+            sender_id = cursor.fetchone()[0]
+
+            # Fetch the receiver's ID
+            cursor.execute('SELECT id FROM users WHERE username = ?', (receiver_username,))
+            receiver_data = cursor.fetchone()
+
+            if receiver_data:
+                receiver_id = receiver_data[0]
+                # Insert the friend request
+                cursor.execute('INSERT INTO friend_requests (sender_id, receiver_id) VALUES (?, ?)', 
+                               (sender_id, receiver_id))
+                conn.commit()
+                message = "Friend request sent successfully!"
+            else:
+                message = "Receiver username does not exist."
+
+            conn.close()
+            return render_template('friend_request_sent.html', message=message)
+
+        return render_template('send_friend_request.html')
+    
+    return redirect(url_for('login'))
+
+
+
 
 
 
