@@ -13,14 +13,20 @@
         <input type="submit" value="Search">
     </form>
 
+    
     <!-- Display search results or user not found message -->
     {% if user_data %}
-        <h2>Search Results</h2>
-        <p><strong>Name:</strong> {{ user_data[1] }}</p>
-        <p><strong>Username:</strong> {{ user_data[2] }}</p>
-        <p><strong>Age:</strong> {{ user_data[4] }}</p>
-        <!-- Add more profile information as needed -->
-        
+        <form action="/addfriend" method="POST">
+            <h2>Search Results</h2>
+            <p><strong>Name:</strong> {{ user_data[1] }}</p>
+            <p><strong>Username:</strong> {{ user_data[2] }}</p>
+            <p><strong>Age:</strong> {{ user_data[4] }}</p>
+            <!-- Add more profile information as needed -->
+            
+            <!-- Hidden element to store the username for the form -->
+            <input type="hidden" name="username" value="{{ user_data[2]}}">
+            <input type="submit" value="Add Friend">
+        </form>
 
     {% elif user_not_found %}
         <p>User not found.</p>

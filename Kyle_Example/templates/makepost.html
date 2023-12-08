@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Make Post</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <form action="/post" method="POST">
+            <label for="post">Make a post:</label>
+            <input type="text" id="post" name="post" required>
+            <br><br>
+            <input type="submit" value="Post">
+            <input type="hidden" name="username" value=" {{ session['username'] }}">
+        </form>
+
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('profile', username=session['username']) }}">Profile</a>
+    </body>
+</html>

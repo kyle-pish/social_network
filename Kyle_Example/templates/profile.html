@@ -14,7 +14,22 @@
         <p><strong>Username:</strong> {{ user[2] }}</p>
         <p><strong>Age:</strong> {{ user[4] }}</p>
 
-        
+        <!-- Display Posts -->
+        <h2>Posts</h2>
+        {% if posts %}
+            <ul>
+                {% for post in posts %}
+                    <li>
+                        <strong>{{ post.username }}</strong>
+                        <p>{{ post.post_content }}</p>
+                        <small>{{ post.timestamp }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No posts available.</p>
+        {% endif %}
+
     {% else %}
         <p>User data not found.</p>
     {% endif %}
