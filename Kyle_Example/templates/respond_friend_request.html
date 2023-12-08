@@ -1,0 +1,21 @@
+<section id="friend-requests">
+  <div class="container">
+      <h2>Pending Friend Requests</h2>
+      {% if friend_requests %}
+          <div class="requestcards">
+              {% for request in friend_requests %}
+                  <div class="requestcard">
+                      <p>From: {{ request[1] }}</p>
+                      <form action="{{ url_for('respond_friend_request') }}" method="POST">
+                          <input type="hidden" name="request_id" value="{{ request[0] }}">
+                          <input type="submit" name="response" value="Accept">
+                          <input type="submit" name="response" value="Decline">
+                      </form>
+                  </div>
+              {% endfor %}
+          </div>
+      {% else %}
+          <p>No pending friend requests.</p>
+      {% endif %}
+  </div>
+</section>

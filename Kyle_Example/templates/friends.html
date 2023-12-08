@@ -36,25 +36,23 @@
             </div>
         </section>
         <section id="friend-requests">
-            <div class="container">
-                <h2>Pending Friend Requests</h2>
-                {% if friend_requests %}
-                    <div class="requestcards">
-                        {% for request in friend_requests %}
-                            <div class="requestcard">
-                                <p>From: {{ request[1] }}</p>
-                                <div>
-                                    <a href="{{ url_for('respond_friend_request', request_id=request[0], response='accepted') }}">Accept</a>
-                                    <a href="{{ url_for('respond_friend_request', request_id=request[0], response='declined') }}">Decline</a>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p>No pending friend requests.</p>
-                {% endif %}
-            </div>
-        </section>
+          <div class="container">
+              <h2>Pending Friend Requests</h2>
+              {% if friend_requests %}
+                  <div class="requestcards">
+                      {% for request in friend_requests %}
+                          <div class="requestcard">
+                              <p>From: {{ request[1] }}</p>
+                              <a href="{{ url_for('respond_friend_request', request_id=request[0], response='accepted') }}">Accept</a>
+                              <a href="{{ url_for('respond_friend_request', request_id=request[0], response='declined') }}">Decline</a>
+                          </div>
+                      {% endfor %}
+                  </div>
+              {% else %}
+                  <p>No pending friend requests.</p>
+              {% endif %}
+          </div>
+      </section>
     </main>
 </body>
 </html>

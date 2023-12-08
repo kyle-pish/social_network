@@ -189,10 +189,20 @@ def friends():
         ''', (user_id, user_id, user_id))
         friends = cursor.fetchall()
 
+        # Fetch friend requests
+        cursor.execute('''
+            SELECT fr.id, u.username 
+            FROM friend_requests fr
+            JOIN users u ON fr.sender_id = u.id
+            WHERE fr.receiver_id = ? AND fr.status = 'pending'
+        ''', (user_id,))
+        friend_requests = cursor.fetchall()
+
         conn.close()
-        return render_template('friends.html', friends=friends)
+        return render_template('friends.html', friends=friends, friend_requests=friend_requests)
     
     return redirect(url_for('login'))
+
 
 
 @app.route('/send_friend_request', methods=['GET', 'POST'])
@@ -229,6 +239,31 @@ def send_friend_request():
     
     return redirect(url_for('login'))
 
+
+@app.route('/respond_friend_request/<int:request_id>/<string:response>')
+def respond_friend_request(request_id, response):
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    if response in ['accepted', 'declined']:
+        conn = create_connection()
+        cursor = conn.cursor()
+
+        # Update the friend request status
+        cursor.execute('UPDATE friend_requests SET status = ? WHERE id = ?', (response, request_id))
+        
+        if response == 'accepted':
+            # Fetch the sender and receiver IDs from the friend_requests table
+            cursor.execute('SELECT sender_id, receiver_id FROM friend_requests WHERE id = ?', (request_id,))
+            sender_id, receiver_id = cursor.fetchone()
+            
+            # Insert the new friendship into the friendships table
+            cursor.execute('INSERT INTO friendships (user_id1, user_id2) VALUES (?, ?)', (sender_id, receiver_id))
+        
+        conn.commit()
+        conn.close()
+
+    return redirect(url_for('friends'))
 
 
 
