@@ -39,18 +39,18 @@ def create_table():
     conn.commit()
     conn.close()
 
-def create_posts_connection():
-    """Create a connection to the posts database"""
-    conn = None
-    try:
-        conn = sqlite3.connect(DATABASE_PATH_POSTS)
-    except sqlite3.Error as e:
-        print(e)
-    return conn
+# def create_posts_connection():
+#     """Create a connection to the posts database"""
+#     conn = None
+#     try:
+#         conn = sqlite3.connect(DATABASE_PATH_POSTS)
+#     except sqlite3.Error as e:
+#         print(e)
+#     return conn
 
 def create_post_table():
     """Create a table to store the posts of users"""
-    conn = create_posts_connection()
+    conn = create_connection()
     cursor = conn.cursor()
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS posts (
@@ -60,6 +60,7 @@ def create_post_table():
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     ''')
+    
 
 @app.route('/')
 def login():
@@ -145,10 +146,10 @@ def profile(username):
             """
             if user_data:
                 # Fetch posts from the posts database for the specified username
-                conn_posts = create_posts_connection()
+                conn_posts = create_connection()
                 cursor_posts = conn_posts.cursor()
 
-                cursor_posts.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (username,))
+                cursor_posts.execute('SELECT post_content FROM posts WHERE username = ? ORDER BY timestamp DESC', (username,))
                 posts = cursor_posts.fetchall()
                 print(posts , "hey")
 
@@ -195,7 +196,7 @@ def make_post():
 def create_post():
     post = request.form.get('post')
     username = request.form.get('username')
-    conn = create_posts_connection()
+    conn = create_connection()
     cursor = conn.cursor()
 
     # conn2 = create_connection()
