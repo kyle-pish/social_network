@@ -120,6 +120,7 @@ def home():
         return redirect(url_for('login'))
 
 @app.route('/profile/<username>', methods=['GET'])
+@app.route('/profile/<username>', methods=['GET'])
 def profile(username):
     print("Username parameter:", username)
     if 'username' in session:
@@ -146,14 +147,11 @@ def profile(username):
             """
             if user_data:
                 # Fetch posts from the posts database for the specified username
-                conn_posts = create_connection()
-                cursor_posts = conn_posts.cursor()
-
-                cursor_posts.execute('SELECT post_content FROM posts WHERE username = ? ORDER BY timestamp DESC', (username,))
-                posts = cursor_posts.fetchall()
+                cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (username,))
+                posts = cursor.fetchall()
                 print(posts , "hey")
 
-                conn_posts.close()
+                conn.close()
                 # Pass user data and following count to the profile template
                 return render_template('profile.html', user=user_data,posts=posts)
             else:

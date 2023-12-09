@@ -20,9 +20,9 @@
             <ul>
                 {% for post in posts %}
                     <li>
-                        <strong>{{ post.username }}</strong>
-                        <p>{{ post.post_content }}</p>
-                        <small>{{ post.timestamp }}</small>
+                        <strong>{{ post[1] }}</strong>
+                        <p>{{ post[2] }}</p>
+                        <small>{{ post[3] }}</small>
                     </li>
                 {% endfor %}
             </ul>
