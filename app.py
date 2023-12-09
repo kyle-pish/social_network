@@ -60,6 +60,23 @@ def create_post_table():
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )
     ''')
+
+
+def create_friend_table():
+    """Create a table to store friend relationships"""
+    conn = create_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS friendships (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user1_id INTEGER,
+        user2_id INTEGER,
+        FOREIGN KEY(user1_id) REFERENCES users(id),
+        FOREIGN KEY(user2_id) REFERENCES users(id)
+    )
+''')
+    conn.commit()
+    conn.close()
     
 
 @app.route('/')
@@ -119,7 +136,7 @@ def home():
     else:
         return redirect(url_for('login'))
 
-@app.route('/profile/<username>', methods=['GET'])
+#@app.route('/profile/<username>', methods=['GET'])
 @app.route('/profile/<username>', methods=['GET'])
 def profile(username):
     print("Username parameter:", username)
@@ -133,18 +150,19 @@ def profile(username):
             user_data = cursor.fetchone()
             print(user_data)
             # Get the count of followed users for the logged-in user
-            """
+            
+            # Fetch user's friends
             cursor.execute('''
-                SELECT COUNT(u.username)
+                SELECT u.*
                 FROM users u
-                INNER JOIN following f ON u.id = f.following_id
-                INNER JOIN users u2 ON f.follower_id = u2.id
+                INNER JOIN friendships f ON u.id = f.user2_id
+                INNER JOIN users u2 ON f.user1_id = u2.id
                 WHERE u2.username = ?
-            ''', (session['username'],))
-            following_count = cursor.fetchone()[0]
+            ''', (username,))
+            friends = cursor.fetchall()
 
-            conn.close()
-            """
+            #conn.close()
+
             if user_data:
                 # Fetch posts from the posts database for the specified username
                 cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (username,))
@@ -153,7 +171,7 @@ def profile(username):
 
                 conn.close()
                 # Pass user data and following count to the profile template
-                return render_template('profile.html', user=user_data,posts=posts)
+                return render_template('profile.html', user=user_data, posts=posts, friends=friends)
             else:
                 # Handle case where user data is not found
                 return "User data not found."
@@ -161,6 +179,7 @@ def profile(username):
             return "Username not provided."
     else:
         return redirect(url_for('login'))
+    
     
 @app.route('/search', methods=['GET'])
 def search():
@@ -181,10 +200,6 @@ def search():
 
     return redirect(url_for('login'))
 
-@app.route('/addfriend', methods=['POST'])
-def add_friend():
-    username = request.form.get('username')
-    return "Friend added successfully"
 
 @app.route('/makepost', methods=['GET'])
 def make_post():
@@ -220,6 +235,43 @@ def create_post():
             conn.close()
             return "Post could not be posted at this time"
     
+
+
+@app.route('/addfriend', methods=['POST'])
+def add_friend():
+    if 'username' in session:
+        friend_username = request.form.get('username')
+
+        conn = create_connection()
+        cursor = conn.cursor()
+
+        # Get the IDs of the logged-in user and the user to be added as a friend
+        cursor.execute('SELECT id FROM users WHERE username = ?', (session['username'],))
+        user1_id = cursor.fetchone()[0]
+
+        cursor.execute('SELECT id FROM users WHERE username = ?', (friend_username,))
+        user2_id = cursor.fetchone()[0]
+
+        # Check if the friendship already exists
+        cursor.execute('SELECT * FROM friendships WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)',
+                       (user1_id, user2_id, user2_id, user1_id))
+        existing_friendship = cursor.fetchone()
+
+        if existing_friendship:
+            conn.close()
+            return "Friend already added."
+
+        # Add the friendship to the database
+        cursor.execute('INSERT INTO friendships (user1_id, user2_id) VALUES (?, ?)', (user1_id, user2_id))
+        conn.commit()
+        conn.close()
+
+        return "Friend added successfully."
+    else:
+        return redirect(url_for('login'))
+
+
+    
 @app.route('/logout')
 def logout():
     session.pop('username', None)
@@ -230,4 +282,5 @@ def logout():
 if __name__ == '__main__':
     create_table()  # Create the table when the app starts
     create_post_table() # Create the table for the posts
+    create_friend_table()
     app.run(debug=True)

@@ -30,6 +30,21 @@
             <p>No posts available.</p>
         {% endif %}
 
+
+        
+        <h2>Friends</h2>
+        {% if friends %}
+            <ul>
+                {% for friend in friends %}
+                    <li>{{ friend[1] }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No friends available.</p>
+        {% endif %}
+
+
+
     {% else %}
         <p>User data not found.</p>
     {% endif %}
