@@ -10,7 +10,13 @@ DATABASE_PATH = os.path.join(os.getcwd(), 'users.db')
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
+'''
+create_connection()
+function to create a connection to the users.db database
 
+returns:
+conn - a connection to the users.db database
+'''
 def create_connection():
     """Create a connection to the SQLite database."""
     conn = None
@@ -21,6 +27,10 @@ def create_connection():
     return conn
 
 
+'''
+create_table():
+creates a users table in the database if one does not exist
+'''
 def create_table():
     """Create a table to store user information."""
     conn = create_connection()
@@ -38,15 +48,10 @@ def create_table():
     conn.commit()
     conn.close()
 
-# def create_posts_connection():
-#     """Create a connection to the posts database"""
-#     conn = None
-#     try:
-#         conn = sqlite3.connect(DATABASE_PATH_POSTS)
-#     except sqlite3.Error as e:
-#         print(e)
-#     return conn
-
+'''
+create_post_table():
+creates a posts table in the users.db database if one does not exist
+'''
 def create_post_table():
     """Create a table to store the posts of users"""
     conn = create_connection()
@@ -61,6 +66,10 @@ def create_post_table():
     ''')
 
 
+'''
+create_friend_table():
+creates a friendships table in the users.db database if one does not exist
+'''
 def create_friend_table():
     """Create a table to store friend relationships"""
     conn = create_connection()
@@ -77,6 +86,15 @@ def create_friend_table():
     conn.commit()
     conn.close()
     
+'''
+get_friends_posts(username):
+retrieves all posts of frineds from the user.db database
+
+params:
+username - a string of a username that is in the user.db database
+returns:
+all_posts - a list of all posts from friends of [username] in the users.db data
+'''
 def get_friends_posts(username):
     all_posts = []
     conn = create_connection()
