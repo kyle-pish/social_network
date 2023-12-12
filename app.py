@@ -95,7 +95,7 @@ def get_friends_posts(username):
         print("FRIEND USERNAME: ", friend_username[0])
         friend_username = friend_username[0]
         cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (friend_username,))
-        all_posts = cursor.fetchall()
+        all_posts = all_posts + cursor.fetchall()
         print("FRIENDS POSTS: ", all_posts)
 
 
@@ -155,7 +155,7 @@ def home():
             print("FRIEND USERNAME: ", friend_username[0])
             friend_username = friend_username[0]
             cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (friend_username,))
-            all_posts = cursor.fetchall()
+            all_posts = all_posts + cursor.fetchall()
             print("FRIENDS POSTS: ", all_posts)
         
 
@@ -188,7 +188,7 @@ def home():
             print("FRIEND USERNAME: ", friend_username[0])
             friend_username = friend_username[0]
             cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (friend_username,))
-            all_posts = cursor.fetchall()
+            all_posts = all_posts + cursor.fetchall()
             print("FRIENDS POSTS: ", all_posts)
 
         return render_template('home.html', posts=all_posts)
@@ -307,7 +307,7 @@ def create_post():
             print("FRIEND USERNAME: ", friend_username[0])
             friend_username = friend_username[0]
             cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (friend_username,))
-            all_posts = cursor.fetchall()
+            all_posts = all_posts + cursor.fetchall()
             print("FRIENDS POSTS: ", all_posts)
 
         return render_template('home.html', posts=all_posts)
