@@ -78,6 +78,26 @@ def create_friend_table():
     conn.commit()
     conn.close()
     
+def get_friends_posts(username):
+    conn = create_connection()
+    cursor = conn.cursor()
+    all_posts = []
+    cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
+    user_id = cursor.fetchone()
+    user_id = user_id[0]
+    cursor.execute('SELECT user2_id FROM friendships WHERE user1_id')
+    friend_ids = cursor.fetchall()
+    for friend in friend_ids:
+        print("FRIENDS IDS: ", friend[0])
+        friend_id = friend[0]
+        cursor.execute('SELECT username FROM users WHERE id = ?', (friend_id,))
+        friend_username = cursor.fetchone()
+        print("FRIEND USERNAME: ", friend_username[0])
+        friend_username = friend_username[0]
+        cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (friend_username,))
+        all_posts = cursor.fetchall()
+        print("FRIENDS POSTS: ", all_posts)
+
 
 @app.route('/')
 def login():
@@ -120,19 +140,58 @@ def home():
 
         cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))
         user = cursor.fetchone()
+
+        all_posts = []
+        cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
+        user_id = cursor.fetchone()
+        user_id = user_id[0]
+        cursor.execute('SELECT user2_id FROM friendships WHERE user1_id')
+        friend_ids = cursor.fetchall()
+        for friend in friend_ids:
+            print("FRIENDS IDS: ", friend[0])
+            friend_id = friend[0]
+            cursor.execute('SELECT username FROM users WHERE id = ?', (friend_id,))
+            friend_username = cursor.fetchone()
+            print("FRIEND USERNAME: ", friend_username[0])
+            friend_username = friend_username[0]
+            cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (friend_username,))
+            all_posts = cursor.fetchall()
+            print("FRIENDS POSTS: ", all_posts)
+        
+
         conn.close()
 
         if user:
             # Successful login - set the session and redirect to home page
             session['username'] = username
-            return redirect(url_for('home'))
+            return render_template('home.html', posts=all_posts)
         else:
             # Failed login - handle appropriately (redirect to login page, display error, etc.)
             return "Login failed. Invalid username or password."
 
     # Check if the user is logged in using the session
     if 'username' in session:
-        return render_template('home.html', username=session['username'])
+        conn = create_connection()
+        cursor = conn.cursor()
+        username=session['username']
+        all_posts = []
+        cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
+        user_id = cursor.fetchone()
+        user_id = user_id[0]
+        cursor.execute('SELECT user2_id FROM friendships WHERE user1_id')
+        friend_ids = cursor.fetchall()
+        for friend in friend_ids:
+            print("FRIENDS IDS: ", friend[0])
+            friend_id = friend[0]
+            cursor.execute('SELECT username FROM users WHERE id = ?', (friend_id,))
+            friend_username = cursor.fetchone()
+            print("FRIEND USERNAME: ", friend_username[0])
+            friend_username = friend_username[0]
+            cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (friend_username,))
+            all_posts = cursor.fetchall()
+            print("FRIENDS POSTS: ", all_posts)
+
+        return render_template('home.html', posts=all_posts)
     else:
         return redirect(url_for('login'))
 
@@ -229,7 +288,29 @@ def create_post():
 
         conn.commit()
         conn.close()
-        return render_template('home.html')
+
+
+        conn = create_connection()
+        cursor = conn.cursor()
+        all_posts = []
+        cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
+        user_id = cursor.fetchone()
+        print("USER ID: ", user_id)
+        user_id = user_id[0]
+        cursor.execute('SELECT user2_id FROM friendships WHERE user1_id')
+        friend_ids = cursor.fetchall()
+        for friend in friend_ids:
+            print("FRIENDS IDS: ", friend[0])
+            friend_id = friend[0]
+            cursor.execute('SELECT username FROM users WHERE id = ?', (friend_id,))
+            friend_username = cursor.fetchone()
+            print("FRIEND USERNAME: ", friend_username[0])
+            friend_username = friend_username[0]
+            cursor.execute('SELECT * FROM posts WHERE username = ? ORDER BY timestamp DESC', (friend_username,))
+            all_posts = cursor.fetchall()
+            print("FRIENDS POSTS: ", all_posts)
+
+        return render_template('home.html', posts=all_posts)
     except sqlite3.IntegrityError:
             conn.rollback()
             conn.close()
