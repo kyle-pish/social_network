@@ -312,6 +312,7 @@ def add_friend():
 
         # Add the friendship to the database
         cursor.execute('INSERT INTO friendships (user1_id, user2_id) VALUES (?, ?)', (user1_id, user2_id))
+        
         conn.commit()
         conn.close()
 

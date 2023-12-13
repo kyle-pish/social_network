@@ -7,6 +7,28 @@
     <title>Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='universal.css') }}">
+    <style>
+        li {
+            border: 1px solid #ccc; /* Outline style */
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            width: 500px; /* Set the width */
+            margin: 0 auto; /* Center horizontally */
+            box-sizing: border-box; /* Include padding and border in width calculation */
+        }
+        ul {
+            list-style: none; /* Remove bullet points */
+            padding: 0;
+            margin: 0;
+        }
+        .date-time {
+            color: #666; 
+        }
+        .post-details {
+            margin-bottom: 8px; /* Adjust the value to add spacing between elements */
+        }
+    </style>
 </head>
 
 <body>
@@ -19,9 +41,12 @@
                     <ul>
                         {% for post in posts %}
                             <li>
-                                <strong>{{ post[1] }}</strong>
+                                <div class="post-details">
+                                    <strong>{{ post[1] }}</strong>
+                                    <small class="date-time">{{ post[3] }}</small>
+                                </div>
                                 <p>{{ post[2] }}</p>
-                                <small>{{ post[3] }}</small>
+                                
                             </li>
                             <br><br>
                         {% endfor %}

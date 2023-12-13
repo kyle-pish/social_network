@@ -6,6 +6,65 @@
     <title>Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='universal.css') }}">
+    <style>
+        li {
+            border: 1px solid #ccc; /* Outline style */
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            width: 500px; /* Set the width */
+            margin: 0 auto; /* Center horizontally */
+            box-sizing: border-box; /* Include padding and border in width calculation */
+        }
+        ul {
+            list-style: none; /* Remove bullet points */
+            padding: 0;
+            margin: 0;
+        }
+        .date-time {
+            color: #666; 
+        }
+        .post-details {
+            margin-bottom: 8px; /* Adjust the value to add spacing between elements */
+        }
+        h2 {
+            text-align: center; /* Center the text */
+            margin-right: 450px; /* Offset to the left */
+            
+        }
+
+        /* Hide the friends list by default */
+        .friends-list {
+            display: none;
+            position: absolute;
+            background: #666;
+            padding: 10px;
+            width: 150px;
+            list-style: none;
+            margin: 0;
+            border: none; /* Remove the border */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Adding shadow for a slight separation effect */
+        }
+
+        /* Style the Friends button */
+        .friends-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Remove the default list styles when displayed */
+        .friends-list li {
+            list-style: none;
+            margin: 0;
+            padding: 5px 0;
+            border: none;
+        }
+        
+    </style>
 </head>
 
 <body>
@@ -19,38 +78,33 @@
                     <p><strong>Name:</strong> {{ user[1] }}</p>
                     <p><strong>Username:</strong> {{ user[2] }}</p>
                     <p><strong>Age:</strong> {{ user[4] }}</p>
-            
+                    <!-- Display Friends -->
+                    <div class="friends">
+                        <button onclick="toggleFriends()" class="friends-button">Friends</button>
+                        <ul id="friendsList" class="friends-list">
+                            {% for friend in friends %}
+                                <li>{{ friend[1] }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                     <!-- Display Posts -->
                     <h2>Posts</h2>
                     {% if posts %}
                         <ul>
                             {% for post in posts %}
                                 <li>
-                                    <strong>{{ post[1] }}</strong>
+                                    <div class="post-details">
+                                        <strong>{{ post[1] }}</strong>
+                                        <small class="date-time">{{ post[3] }}</small>
+                                    </div>
                                     <p>{{ post[2] }}</p>
-                                    <small>{{ post[3] }}</small>
+                                    
                                 </li>
                             {% endfor %}
                         </ul>
                     {% else %}
                         <p>No posts available.</p>
                     {% endif %}
-            
-            
-                    
-                    <h2>Friends</h2>
-                    {% if friends %}
-                        <ul>
-                            {% for friend in friends %}
-                                <li>{{ friend[1] }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>No friends available.</p>
-                    {% endif %}
-            
-            
-            
                 {% else %}
                     <p>User data not found.</p>
                 {% endif %}
@@ -58,6 +112,17 @@
         </section>
     </main>
     {% include 'footer.html' %}
+
+    <script>
+        function toggleFriends() {
+            var friendsList = document.getElementById('friendsList');
+            if (friendsList.style.display === 'none') {
+                friendsList.style.display = 'block';
+            } else {
+                friendsList.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 
 </html>
