@@ -1,0 +1,55 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#logo {
+  margin: auto;
+  display: block;
+}
+
+#about {
+  margin-top: .5em;
+  font-size: 1.2em;
+}
+
+h1 {
+  margin: 0;
+  margin-bottom: .5em;
+  text-align: center;
+}
+
+section {
+  flex-grow: 1;
+}
+
+form {
+  margin: 0;
+  padding: 2em;
+  border-radius: 1.5em;
+  box-shadow: none;
+  width: 100%;
+}
+
+main {
+  max-width: 30em;
+  margin: auto;
+  padding-top: 1em;
+}
+
+input[type="text"], input[type="password"], input[type="number"]  {
+  padding: 2em;
+  max-width: 100%;
+  width: 100%;
+  margin-bottom: 1em;
+  border-radius: 1.5em;
+}
+
+
+input[type="submit"] {
+  padding: 2em;
+  width: 100%;
+  border-radius: 1.5em;
+}

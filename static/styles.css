@@ -12,6 +12,10 @@ body {
     font-size: 75px;
 }
 
+button {
+    border: 0;
+}
+
 /* Header styles */
 h1 {
     color: #fff;
@@ -71,5 +75,7 @@ a:hover {
 
 /* Add general padding to the body content */
 body > * {
-    padding: 20px;
+    padding: 20px
 }
+
+@import url('/static/universal.css');

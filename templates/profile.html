@@ -5,51 +5,59 @@
     <meta charset="UTF-8">
     <title>Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='universal.css') }}">
 </head>
 
 <body>
-    <h1>User Profile</h1>
-    {% if user %}
-        <p><strong>Name:</strong> {{ user[1] }}</p>
-        <p><strong>Username:</strong> {{ user[2] }}</p>
-        <p><strong>Age:</strong> {{ user[4] }}</p>
+    {% include 'header.html' %}
+    <main>
+        <section>
+            <div class="container">
 
-        <!-- Display Posts -->
-        <h2>Posts</h2>
-        {% if posts %}
-            <ul>
-                {% for post in posts %}
-                    <li>
-                        <strong>{{ post[1] }}</strong>
-                        <p>{{ post[2] }}</p>
-                        <small>{{ post[3] }}</small>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No posts available.</p>
-        {% endif %}
-
-
-        
-        <h2>Friends</h2>
-        {% if friends %}
-            <ul>
-                {% for friend in friends %}
-                    <li>{{ friend[1] }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No friends available.</p>
-        {% endif %}
-
-
-
-    {% else %}
-        <p>User data not found.</p>
-    {% endif %}
-    <a href="{{ url_for('home') }}">Home</a>
-    <a href="/">Logout</a>
+                <h1>User Profile</h1>
+                {% if user %}
+                    <p><strong>Name:</strong> {{ user[1] }}</p>
+                    <p><strong>Username:</strong> {{ user[2] }}</p>
+                    <p><strong>Age:</strong> {{ user[4] }}</p>
+            
+                    <!-- Display Posts -->
+                    <h2>Posts</h2>
+                    {% if posts %}
+                        <ul>
+                            {% for post in posts %}
+                                <li>
+                                    <strong>{{ post[1] }}</strong>
+                                    <p>{{ post[2] }}</p>
+                                    <small>{{ post[3] }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No posts available.</p>
+                    {% endif %}
+            
+            
+                    
+                    <h2>Friends</h2>
+                    {% if friends %}
+                        <ul>
+                            {% for friend in friends %}
+                                <li>{{ friend[1] }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No friends available.</p>
+                    {% endif %}
+            
+            
+            
+                {% else %}
+                    <p>User data not found.</p>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+    {% include 'footer.html' %}
 </body>
 
 </html>

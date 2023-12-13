@@ -1,0 +1,13 @@
+form {
+  max-width: 40em;
+  margin: auto !important;
+}
+
+label {
+  margin-bottom: 1em;
+}
+
+button[type="submit"] {
+  width: 100%;
+  border-radius: 1.5em;
+}

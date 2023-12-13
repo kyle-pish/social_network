@@ -3,24 +3,40 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='universal.css') }}">
+    <style>
+        #main-content {
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Sign Up</h1>
-    <form action="/signup" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age" required><br><br>
-        <input type="submit" value="Sign Up">
-    </form>
-    <p>Already have an account? <a href="/">Login</a></p>
+    <section>
+        <div class="container">
+            <img id="logo" src="/static/imgs/logo.png" height="120" width="120" alt="">
+            <p id="about" class="text-center mt-0">A Fun Little Social App</p>
+            <main>
+                <h1>Sign Up</h1>
+                <form action="/signup" method="post">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required><br><br>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required><br><br>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required><br><br>
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" required><br><br>
+                    <input type="submit" value="Sign Up">
+                </form>
+                <p>Already have an account? <a href="/">Login</a></p>
+            </main>
+        </div>
+    </section>
 </body>
 
 </html>

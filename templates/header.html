@@ -1,0 +1,59 @@
+<style>
+  header {
+    padding: 1em 0;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+  }
+
+  header a {
+    color: #fff;
+    padding: .5em 1em;
+    border-radius:10em;
+  }
+
+  header a:hover {
+    background: #fff;
+  }
+
+  #logo {
+    background: rgba(255, 255, 255, .1);
+  }
+
+  #logo:hover {
+    background: #fff;
+  }
+
+  #logo span {
+    font-size: 1.4em;
+    font-weight: bold;
+  }
+
+  #profile-icon {
+    font-family: "Nabla";
+    font-size: 1.7em;
+    width: 2em;
+    height: 2em;
+    line-height: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff45;
+    text-shadow: 0 -5px 5px rgba(0, 0, 0, .3);
+  }
+</style>
+
+<header>
+  <div class="container flex justify-between items-center">
+    <a id="logo" href="/home"  class="flex gap-3 items-center">
+      <img src="/static/imgs/logo.png" height="50" width="50" alt="">
+      <span class="text-xl font-bold">The Social</span>
+    </a>
+      <nav class="flex gap-7 items-center">
+          <a href="/search">Search</a>
+          <!-- <a href="/friends">Friends</a> -->
+          <a href="/makepost">Posts</a>
+          <a id="profile-icon" href="{{ url_for('profile', username=session['username']) }}">
+            <span>{{ session['username'][0].upper() }}</span>
+          </a>
+      </nav>
+  </div>
+</header>
